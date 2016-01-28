@@ -6,6 +6,7 @@ This tool provides the metric collection agents for the following New Relic plug
 - EBS
 - ELB
 - RDS
+- DynamoDB
 - SQS
 - SNS
 - ElastiCache
@@ -156,6 +157,8 @@ You will need to create a new IAM group, `NewRelicCloudWatch`, where the permiss
         "sqs:GetQueueAttributes",
         "sqs:ListQueues",
         "rds:DescribeDBInstances",
+        "dynamodb:ListTables",
+        "dynamodb:DescribeTable",
         "SNS:ListTopics"
       ],
       "Effect": "Allow",

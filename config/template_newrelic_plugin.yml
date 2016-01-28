@@ -55,6 +55,8 @@ agents:
     enabled: false
   rds:
     enabled: false
+  ddb:
+    enabled: false
   sqs:
     enabled: false
   sns:
