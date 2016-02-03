@@ -27,17 +27,26 @@ module NewRelicAWS
         ]
       end
 
+      def derived_metrics
+        [
+          ["Utilization/ReadUtilization", :ratio, "ConsumedReadCapacityUnits", "ProvisionedReadCapacityUnits"],
+          ["Utilization/WriteUtilization", :ratio, "ConsumedWriteCapacityUnits", "ProvisionedWriteCapacityUnits"],
+        ]
+      end
+
       def collect
         data_points = []
         tables.each do |table_name|
-          metric_list.each do |(metric_name, statistic, unit, reporting_prefix, period, scale)|
+          table_data_points = []
+          metric_list.each do |(metric_name, statistic, unit, reporting_prefix, default_value, period, scale)|
             data_point = get_data_point(
               :namespace     => "AWS/DynamoDB",
               :metric_name   => metric_name,
               :statistic     => statistic,
               :unit          => unit,
-              :default_value => 0,
+              :default_value => default_value,
               :period        => period,
+              :start_time    => (Time.now.utc - (@cloudwatch_delay + (period || 60) * 5)).iso8601,
               :dimension     => {
                 :name  => "TableName",
                 :value => table_name
@@ -49,9 +58,21 @@ module NewRelicAWS
             end
             NewRelic::PlatformLogger.debug("metric_name: #{metric_name}, statistic: #{statistic}, unit: #{unit}, response: #{data_point.inspect}")
             unless data_point.nil?
-              data_points << data_point
+              table_data_points << data_point
             end
           end
+
+          # calculate derived metrics
+          derived_metrics.each { |attrs|
+            if attrs[1] == :ratio
+              # find the required attributes
+              data_point1 = table_data_points.select { |p| p[1].match(attrs[2]) }.first
+              data_point2 = table_data_points.select { |p| p[1].match(attrs[3]) }.first
+              next unless data_point1 && data_point2
+              table_data_points << [table_name, attrs[0], "Percent", data_point1[3] * 100.0 / data_point2[3]]
+            end
+          }
+          data_points += table_data_points
         end
         data_points
       end
