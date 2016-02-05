@@ -37,7 +37,7 @@ module NewRelicAWS
         end
         NewRelic::PlatformLogger.info("Retrieved statistics: #{statistics.inspect}")
 
-        point = statistics[:datapoints].last
+        point = statistics[:datapoints].sort{ |a,b| a[:timestamp] <=> b[:timestamp] }.last
         value = get_value(point, options)
         return if value.nil?
 
