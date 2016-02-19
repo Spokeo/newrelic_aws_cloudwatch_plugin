@@ -8,7 +8,7 @@ require 'newrelic_aws/version'
 
 # AWS SDK debug logging
 if NewRelic::Plugin::Config.config.newrelic['verbose'].to_i > 1
-  AWS.config(
+  Aws.config.update(
     :logger => NewRelic::PlatformLogger,
     :log_level => :debug
   )
