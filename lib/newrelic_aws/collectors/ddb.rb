@@ -26,8 +26,8 @@ module NewRelicAWS
           {:metric_name => "ThrottledRequests", :statistic => "Sum", :unit => "Count", :default_value => 0, :dimensions => [["Operation", "PutItem"], ["Operation", "DeleteItem"], ["Operation", "UpdateItem"], ["Operation", "GetItem"], ["Operation", "BatchGetItem"], ["Operation", "BatchWriteItem"], ["Operation", "Scan"], ["Operation", "Query"]], :ignore_gsi => true},
           {:metric_name => "ProvisionedReadCapacityUnits", :statistic => "Maximum", :unit => "Count", :period => 300, :reporting_prefix => "Capacity/Read"},
           {:metric_name => "ProvisionedWriteCapacityUnits", :statistic => "Maximum", :unit => "Count", :period => 300, :reporting_prefix => "Capacity/Write"},
-          {:metric_name => "ConsumedReadCapacityUnits", :statistic => "Sum", :unit => "Count", :scale => 60, :reporting_prefix => "Capacity/Read"},
-          {:metric_name => "ConsumedWriteCapacityUnits", :statistic => "Sum", :unit => "Count", :scale => 60, :reporting_prefix => "Capacity/Write"},
+          {:metric_name => "ConsumedReadCapacityUnits", :statistic => "Sum", :unit => "Count", :default_value => 0, :scale => 60, :reporting_prefix => "Capacity/Read"},
+          {:metric_name => "ConsumedWriteCapacityUnits", :statistic => "Sum", :unit => "Count", :default_value => 0, :scale => 60, :reporting_prefix => "Capacity/Write"},
         ]
       end
 
