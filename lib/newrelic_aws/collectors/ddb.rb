@@ -1,4 +1,3 @@
-require 'pry'
 module NewRelicAWS
   module Collectors
     class DDB < Base
