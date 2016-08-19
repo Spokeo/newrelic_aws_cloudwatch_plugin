@@ -13,7 +13,7 @@ module NewRelicAWS
           :secret_access_key => @aws_secret_key,
           :region => @aws_region
         )
-        rds.instances.map { |instance| instance.id }
+        rds.db_instances.map { |instance| instance.id }
       end
 
       def metric_list
